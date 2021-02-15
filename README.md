@@ -6,4 +6,4 @@ This maze is based upon the Hunt and Kill algorithm.
 
 ## Status
 
-WIP
+Created! Needs some refinement.

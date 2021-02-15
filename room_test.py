@@ -1,8 +1,8 @@
-from room import Room, Kind, Directions, opposite_exit, remaining_exits, symbol_from
+from room import Room, KIND, DIRECTIONS, opposite_exit, symbol_from
 
 
 def test_symbol():
-    room = Room(2, 2, Kind.NORMAL)
+    room = Room(2, 2, KIND["NORMAL"])
 
     actual = room.symbol()
     expected = 2002
@@ -11,46 +11,37 @@ def test_symbol():
 
 
 def test_normal_room():
-    room = Room(2, 2, Kind.NORMAL)
+    room = Room(2, 2, KIND["NORMAL"])
 
     actual = room.kind
-    expected = Kind.NORMAL
+    expected = KIND["NORMAL"]
 
     assert actual == expected
 
 
 def test_start_room():
-    room = Room(2, 2, Kind.START)
+    room = Room(2, 2, KIND["START"])
 
     actual = room.kind
-    expected = Kind.START
+    expected = KIND["START"]
 
     assert actual == expected
 
 
 def test_end_room():
-    room = Room(2, 2, Kind.END)
+    room = Room(2, 2, KIND["END"])
 
     actual = room.kind
-    expected = Kind.END
+    expected = KIND["END"]
 
     assert actual == expected
 
 
 def test_opposite_exit():
-    my_exit = Directions.EAST
+    my_exit = DIRECTIONS["EAST"]
 
     actual = opposite_exit(my_exit)
-    expected = Directions.WEST
-
-    assert actual == expected
-
-
-def test_remaining_exits():
-    my_exits = [Directions.EAST, Directions.SOUTH]
-
-    actual = remaining_exits(my_exits)
-    expected = [Directions.NORTH, Directions.WEST]
+    expected = DIRECTIONS["WEST"]
 
     assert actual == expected
 

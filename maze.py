@@ -1,5 +1,5 @@
 from random import randint, shuffle
-from room import Kind, Room, ALL_EXITS, remaining_exits, opposite_exit, symbol_from
+from room import KIND, Room, ALL_EXITS, opposite_exit, symbol_from
 
 
 class Maze:
@@ -14,12 +14,32 @@ class Maze:
 
     def __room_count(self):
         if self.__rooms == 1:
-            return Kind.START
+            return KIND["START"]
 
         if self.__rooms == self.__width * self.__height:
-            return Kind.END
+            return KIND["END"]
 
-        return Kind.NORMAL
+        return KIND["NORMAL"]
+
+    def __possible_links(self, x, y):
+        possible_links = []
+
+        for possible_link in ALL_EXITS:
+            nx = x + ALL_EXITS[possible_link].dx
+            ny = y + ALL_EXITS[possible_link].dy
+
+            if nx == 0 or nx > self.__width:
+                continue
+
+            if ny == 0 or ny > self.__height:
+                continue
+
+            dir_symbol = symbol_from(nx, ny)
+
+            if dir_symbol in self.__maze:
+                possible_links.append(possible_link)
+
+        return possible_links
 
     def __available_exits(self, x, y):
         possible_exits = []
@@ -45,34 +65,26 @@ class Maze:
         return True if len(self.__available_exits(x, y)) == 0 else False
 
     def __walk(self, x, y):
-        my_exit = -1
         opposite = -1
         while not self.__dead_end(x, y):
-            kind = self.__room_count()
-            room = Room(x, y, kind)
-            room.exits = []
+            exits = self.__available_exits(x, y)
+            shuffle(exits)
+            my_exit = exits[0]
 
-            if opposite > -1:
+            room = Room(x, y, self.__room_count())
+            room.exits.append(my_exit)
+
+            if opposite > 0:
                 room.exits.append(opposite)
 
-            possible_exits = self.__available_exits(x, y)
-
-            if my_exit > -1:
-                possible_exits = list(set(possible_exits) - {opposite_exit(my_exit)})
-
-            shuffle(possible_exits)
-            my_exit = possible_exits[0]
-            room.exits.append(my_exit)
             self.__maze[room.symbol()] = room
             self.__rooms += 1
 
             opposite = opposite_exit(my_exit)
-            x = x + ALL_EXITS[my_exit].dx
-            y = y + ALL_EXITS[my_exit].dy
+            x += ALL_EXITS[my_exit].dx
+            y += ALL_EXITS[my_exit].dy
         else:
-            kind = self.__room_count()
-            room = Room(x, y, kind)
-            # TODO: what if it's a dead end room?
+            room = Room(x, y, self.__room_count())
             room.exits.append(opposite)
             self.__maze[room.symbol()] = room
             self.__rooms += 1
@@ -80,22 +92,32 @@ class Maze:
     def __hunt(self):
         for y in range(1, self.__height + 1):
             for x in range(1, self.__width + 1):
-                index = symbol_from(x, y)
-                available = self.__available_exits(x, y)
-                if index not in self.__maze and len(available) > 0:
-                    self.__walk(x, y)
+                symbol = symbol_from(x, y)
+                links = self.__possible_links(x, y)
+                if symbol not in self.__maze and len(links) > 0:
+                    room = Room(x, y, self.__room_count())
+                    shuffle(links)
+                    link = links[0]
+                    room.exits.append(link)
+                    self.__maze[room.symbol()] = room
+                    self.__rooms += 1
+
+                    opposite = opposite_exit(link)
+                    another_symbol = symbol_from(x + ALL_EXITS[link].dx, y + ALL_EXITS[link].dy)
+                    another_room = self.__maze[another_symbol]
+                    another_room.exits.append(opposite)
+                    self.__maze[another_symbol] = another_room
 
     def create_maze(self):
         initial_x = randint(1, self.__width)
         initial_y = randint(1, self.__height)
 
         self.__walk(initial_x, initial_y)
-        # TODO: delete the line below after problems solved
-        self.print_maze()
-        self.__hunt()
+        while self.__rooms < (self.__width * self.__height):
+            self.__hunt()
 
     def start_room(self):
-        return next(filter(lambda room: room.kind == Kind.START, self.__maze.values()))
+        return [room for room in self.__maze.values() if room.kind == KIND["START"]][0]
 
     def room_at(self, x, y):
         symbol = symbol_from(x, y)

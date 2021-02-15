@@ -1,14 +1,16 @@
-class Kind:
-    NORMAL = 0
-    START = 1
-    END = 2
+KIND = {
+    "NORMAL": 1,
+    "START": 2,
+    "END": 3
+}
 
 
-class Directions:
-    NORTH = 0
-    EAST = 1
-    SOUTH = 2
-    WEST = 3
+DIRECTIONS = {
+    "NORTH": 1,
+    "EAST": 2,
+    "SOUTH": 3,
+    "WEST": 4
+}
 
 
 class Exit:
@@ -25,15 +27,11 @@ class Exit:
 
 
 ALL_EXITS = {
-    Directions.NORTH: Exit(Directions.SOUTH, 0, -1, "N"),
-    Directions.EAST:  Exit(Directions.WEST, 1, 0, "E"),
-    Directions.SOUTH: Exit(Directions.NORTH, 0, 1, "S"),
-    Directions.WEST:  Exit(Directions.EAST, -1, 0, "W")
+    DIRECTIONS["NORTH"]: Exit(DIRECTIONS["SOUTH"], 0, -1, "N"),
+    DIRECTIONS["EAST"]:  Exit(DIRECTIONS["WEST"], 1, 0, "E"),
+    DIRECTIONS["SOUTH"]: Exit(DIRECTIONS["NORTH"], 0, 1, "S"),
+    DIRECTIONS["WEST"]:  Exit(DIRECTIONS["EAST"], -1, 0, "W")
 }
-
-
-def remaining_exits(room_exits):
-    return list(set(ALL_EXITS) - set(room_exits))
 
 
 def opposite_exit(room_exit):
@@ -47,13 +45,14 @@ def symbol_from(x, y):
 class Room:
     x = 0
     y = 0
-    kind = Kind.NORMAL
+    kind = KIND["NORMAL"]
     exits = []
 
     def __init__(self, x, y, kind):
         self.x = x
         self.y = y
         self.kind = kind
+        self.exits = []
 
     def symbol(self):
         return symbol_from(self.x, self.y)
@@ -62,23 +61,23 @@ class Room:
         return self.exits.__contains__(room_exit)
 
     def __print_exits(self):
-        n = "N" if self.__contains_exit(Directions.NORTH) else " "
-        e = "E" if self.__contains_exit(Directions.EAST) else " "
-        s = "S" if self.__contains_exit(Directions.SOUTH) else " "
-        w = "W" if self.__contains_exit(Directions.WEST) else " "
+        n = "N" if self.__contains_exit(DIRECTIONS["NORTH"]) else " "
+        e = "E" if self.__contains_exit(DIRECTIONS["EAST"]) else " "
+        s = "S" if self.__contains_exit(DIRECTIONS["SOUTH"]) else " "
+        w = "W" if self.__contains_exit(DIRECTIONS["WEST"]) else " "
 
         return f"{n}{e}{s}{w}"
 
     def __print_kind_name(self):
         kind_name = ""
 
-        if self.kind == Kind.NORMAL:
+        if self.kind == KIND["NORMAL"]:
             kind_name = "NORMAL"
 
-        if self.kind == Kind.START:
+        if self.kind == KIND["START"]:
             kind_name = "START"
 
-        if self.kind == Kind.END:
+        if self.kind == KIND["END"]:
             kind_name = "END"
 
         return kind_name
