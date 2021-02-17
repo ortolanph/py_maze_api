@@ -1,2 +1,2 @@
-from room import *
-from maze import Maze
+from .room import *
+from .maze import Maze
