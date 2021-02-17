@@ -1,5 +1,5 @@
 from random import randint, shuffle
-from room import KIND, Room, ALL_EXITS, opposite_exit, symbol_from
+from .room import KIND, Room, ALL_EXITS, opposite_exit, symbol_from
 
 
 class Maze:
