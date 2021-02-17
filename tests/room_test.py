@@ -1,4 +1,4 @@
-from room import Room, KIND, DIRECTIONS, opposite_exit, symbol_from
+from maze_api.room import Room, KIND, DIRECTIONS, opposite_exit, symbol_from
 
 
 def test_symbol():

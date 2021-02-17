@@ -1,5 +1,8 @@
 README.md
 setup.py
+maze_api/__init__.py
+maze_api/maze.py
+maze_api/room.py
 py_maze_api.egg-info/PKG-INFO
 py_maze_api.egg-info/SOURCES.txt
 py_maze_api.egg-info/dependency_links.txt

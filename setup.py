@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='py-maze-api',
-    version='1.0.0',
+    version='1.0.1',
     url='https://github.com/ortolanph/py_maze_api.git',
     author='Paulo Ortolan',
     author_email='paulo.ortolan@gmail.com',
