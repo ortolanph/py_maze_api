@@ -9,6 +9,7 @@ class Maze:
     __rooms = 1
 
     def __init__(self, width, height):
+        self.__maze.clear()
         self.__width = width
         self.__height = height
 
